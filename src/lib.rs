@@ -2,10 +2,9 @@ use std::{
     fs::{self, File},
     io::Write,
     path::Path,
-    u128,
 };
 
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -26,7 +25,7 @@ pub enum FileError {
 
 pub fn touch_default_file(filepath: &str) -> Result<()> {
     let mut file = File::create(filepath)?;
-    file.write_all(b"department,name,age,salary\n")?;
+    file.write_all(b"Department,Name,Age,Salary\n")?;
     Ok(())
 }
 
@@ -73,37 +72,31 @@ pub fn add_new(filepath: &str, department: &String, name: &String, age: u8, sala
     Ok(())
 }
 
-#[allow(unused_variables)]
-pub fn list_employees(filepath: &str, department: &str) -> Result<()> {
+//pub fn list_employees(filepath: &str, department: &str) -> Result<()> {
+pub fn list_employees(filepath: &str, department: Option<&str>) -> Result<()> {
     let path = Path::new(&filepath);
 
     let mut rdr = csv::ReaderBuilder::new()
         .has_headers(true)
         .from_path(path)?;
 
-    let mut count: u128 = 0;
-    for result in rdr.deserialize() {
-        let empl: Employee = result?;
-        if empl.department == department {
-            print!("{:?}", empl);
-            count += 1;
+    match department {
+        None => {
+            for result in rdr.deserialize() {
+                let empl: Employee = result?;
+                println!("{:?}", empl);
+            }
+        }
+        Some(dep) => {
+            for result in rdr.deserialize() {
+                let empl: Employee = result?;
+                if empl.department == dep {
+                    println!("{:?}", empl);
+                }
+            }
         }
     }
-
-    if count == 0 {
-        return Err(anyhow!("No employees found in department {}.", department));
-    }
     Ok(())
-}
-
-// Self explanatory
-pub fn check_if_departments_exist(filepath: &str) -> Result<bool> {
-    let path = std::path::Path::new(filepath);
-    if path.exists() {
-        Ok(true)
-    } else {
-        Err(anyhow!("Departments file does not exist."))
-    }
 }
 
 pub fn get_input_from_user() -> Result<String, String> {

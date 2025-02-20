@@ -109,10 +109,24 @@ fn main() {
 
     if args.list {
         match args.department {
-            Some(dep) => list_employees(&filepath, &dep).unwrap(),
+            Some(dep) => {
+                if let Err(error) = list_employees(&filepath, Some(&dep)) {
+                    println!("Error when listing employees: {error}");
+                    process::exit(1);
+                } else {
+                    process::exit(0);
+                }
+            }
             None => {
-                print!("Error: No department to filter with.");
-                process::exit(1);
+                println!("No department specified. Printing all employees:");
+                //list_employees(&filepath, None).unwrap();
+                //process::exit(1);
+                if let Err(error) = list_employees(&filepath, None) {
+                    println!("Error when listing employees: {error}");
+                    process::exit(1);
+                } else {
+                    process::exit(0);
+                }
             }
         }
     }
