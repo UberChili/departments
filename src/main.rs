@@ -74,14 +74,14 @@ fn main() {
 
     if args.add {
         let department = match args.department {
-            Some(dep) => &dep,
+            Some(dep) => dep,
             None => {
                 println!("Error: Department name is required.");
                 process::exit(1);
             }
         };
         let name = match args.name {
-            Some(name) => &name,
+            Some(name) => name,
             None => {
                 println!("Error: Employee name is required.");
                 process::exit(1);
@@ -99,17 +99,8 @@ fn main() {
             None => 0.0,
         };
 
-        add_new(&filepath, department, name, age, salary).unwrap();
+        add_new(&filepath, &department, &name, age, salary).unwrap();
         process::exit(0);
-
-        //add_new(
-        //    &filepath,
-        //    args.department.unwrap(),
-        //    args.name.unwrap(),
-        //    args.age.unwrap(),
-        //    args.salary.unwrap(),
-        //)
-        //.unwrap();
     }
 
     if args.list {

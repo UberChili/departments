@@ -50,13 +50,7 @@ pub fn check_file_exists(filepath: &str) -> Result<bool, FileError> {
     }
 }
 
-pub fn add_new(
-    filepath: &str,
-    department: String,
-    name: String,
-    age: u8,
-    salary: f64,
-) -> Result<()> {
+pub fn add_new(filepath: &str, department: &String, name: &String, age: u8, salary: f64) -> Result<()> {
     let path = Path::new(&filepath);
     let file = fs::OpenOptions::new()
         .append(true)
