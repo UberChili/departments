@@ -13,6 +13,9 @@ struct Args {
     /// List employees from department
     #[arg(short, long, default_value_t = false)]
     list: bool,
+    /// Find an employee by name
+    #[arg(short, long)]
+    find: Option<String>,
     /// Add a new employee
     #[arg(long, default_value_t = false)]
     add: bool,
