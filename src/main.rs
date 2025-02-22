@@ -2,7 +2,7 @@ use std::process;
 
 use clap::Parser;
 #[allow(unused_imports)]
-use department::{add_new, check_file_exists, list_employees, touch_default_file, FileError};
+use department::{add_new, check_file_exists, list_employees, search_employee, touch_default_file, FileError};
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -14,8 +14,8 @@ struct Args {
     #[arg(short, long, default_value_t = false)]
     list: bool,
     /// Find an employee by name
-    #[arg(short, long)]
-    find: Option<String>,
+    #[arg(short, long, default_value_t = false)]
+    find: bool,
     /// Add a new employee
     #[arg(long, default_value_t = false)]
     add: bool,
@@ -40,11 +40,13 @@ fn main() {
         None => String::from("deps.csv"),
     };
 
-    if !args.list && !args.add {
+    // Check for correct usage, if none of these options are selected, we do nothing
+    if !args.list && !args.add && !args.find {
         process::exit(0);
     }
 
     // Check that file exists
+    // If file doesn't exist, we create a default one
     match check_file_exists(&filepath) {
         Ok(_) => {}
         Err(error) => match error {
@@ -68,7 +70,7 @@ fn main() {
                         process::exit(1);
                     }
                     Ok(_) => {
-                        println!("Fille {} created succesfully.", filepath);
+                        println!("File {} created succesfully.", filepath);
                     }
                 }
             }
@@ -104,6 +106,7 @@ fn main() {
 
         if let Err(error) = add_new(&filepath, &department, &name, age, salary) {
             println!("Error when adding new employee: {}", error);
+            process::exit(1);
         } else {
             ()
         }
@@ -113,7 +116,7 @@ fn main() {
     if args.list {
         match args.department {
             Some(dep) => {
-                if let Err(error) = list_employees(&filepath, Some(&dep)) {
+                if let Err(error) = list_employees(&filepath, Some(dep)) {
                     println!("Error when listing employees: {error}");
                     process::exit(1);
                 } else {
@@ -122,14 +125,29 @@ fn main() {
             }
             None => {
                 println!("No department specified. Printing all employees:");
-                //list_employees(&filepath, None).unwrap();
-                //process::exit(1);
                 if let Err(error) = list_employees(&filepath, None) {
                     println!("Error when listing employees: {error}");
                     process::exit(1);
                 } else {
                     process::exit(0);
                 }
+            }
+        }
+    }
+
+    if args.find {
+        match args.name {
+            Some(name) => {
+                if let Err(error) = search_employee(&filepath, name) {
+                    println!("Error when listing employees: {error}");
+                    process::exit(1);
+                } else {
+                    process::exit(0);
+                }
+            }
+            None => {
+                println!("No name provided for search.");
+                process::exit(0);
             }
         }
     }
