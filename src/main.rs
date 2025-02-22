@@ -107,8 +107,6 @@ fn main() {
         if let Err(error) = add_new(&filepath, &department, &name, age, salary) {
             println!("Error when adding new employee: {}", error);
             process::exit(1);
-        } else {
-            ()
         }
         process::exit(0);
     }

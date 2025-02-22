@@ -70,28 +70,6 @@ pub fn add_new(filepath: &str, department: &String, name: &String, age: u8, sala
     Ok(())
 }
 
-// Finds employees by name
-pub fn find_employees(filepath: &str, name: &str) -> Result<()> {
-    let path = Path::new(&filepath);
-    let mut rdr = csv::ReaderBuilder::new()
-        .has_headers(true)
-        .from_path(path)?;
-
-    let mut count = 0;
-    for result in rdr.deserialize() {
-        let empl: Employee = result?;
-        if empl.name == name {
-            println!("{:?}", empl);
-            count += 1;
-        }
-    }
-    if count == 0 {
-        println!("No employees found with name {}", name);
-    }
-
-    Ok(())
-}
-
 // Lists employees. Prints either all employees or filtered by department
 pub fn list_employees(filepath: &str, department: Option<String>) -> Result<()> {
     let path = Path::new(&filepath);
