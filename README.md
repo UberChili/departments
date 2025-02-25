@@ -1,5 +1,5 @@
 # Introduction
-Simple project to learn and practice writing CLI programs. This helped me practice a little more on error handling in Rust, as well as learn and practice a few Rust crates (mentioned below) and familiarize a little more with the documentation of the standard library. Overall it was a fun quick project.
+Simple project to learn and practice writing CLI programs. This helped me practice a little more on error handling in Rust, as well as learn and practice a few Rust crates (mentioned below) and familiarize a little more with the documentation of the standard library.
 
 ## Crates or requirements
 - Anyhow
